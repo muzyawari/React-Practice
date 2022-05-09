@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Button from "./button";
-import Digimon from "../assets/digimon.png";
-import Pokemon from "../assets/pokemon.png";
-import Tamagotchi from "../assets/tamagotchi.png";
+import Digimon from "../../assets/digimon.png";
+import Pokemon from "../../assets/pokemon.png";
+import Tamagotchi from "../../assets/tamagotchi.png";
+
+import "./tab.styles.css";
 
 export default function Tab({ data }) {
   const [tab, setTab] = useState(1);

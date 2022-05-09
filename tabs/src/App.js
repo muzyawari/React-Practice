@@ -1,9 +1,14 @@
-import Tab from "./components/tab";
+import Tab from "./routes/tabs/tab";
+import Menu from "./routes/menu/menu";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <div className="tabby">
-      <Tab />
+      <Routes>
+        <Route index element={<Tab />}></Route>
+        <Route path="modal" element={<Menu />}></Route>
+      </Routes>
     </div>
   );
 }
