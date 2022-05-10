@@ -16,13 +16,15 @@ export default function Carousel() {
   function handleNextClick() {
     if (slide !== images) {
       setSlide((prevIndex) => prevIndex + 1);
+    } else if (slide === images) {
+      setSlide(1);
     }
   }
 
   function handlePrevClick() {
     if (slide !== 1) {
       setSlide((prevIndex) => prevIndex - 1);
-    }
+    } else setSlide(3);
   }
 
   return (
@@ -30,7 +32,7 @@ export default function Carousel() {
       <button
         className="carousel__button previous-button"
         onClick={handlePrevClick}
-        hidden={slide === 1 ? "hidden" : ""}
+        // {hidden={slide === 1 ? "hidden" : ""}}
       >
         <svg id="left" viewBox="0 0 54 69.007">
           <path d="M47 0L3.44 34.502 47 69.007z" />
@@ -54,7 +56,7 @@ export default function Carousel() {
       <button
         className="carousel__button next-button"
         onClick={handleNextClick}
-        hidden={slide === images ? "hidden" : ""}
+        // {hidden={slide === images ? "hidden" : ""}}
       >
         <svg viewBox="0 0 54 69.007">
           <path d="M5-.121l43.56 34.502L5 68.886z" />
