@@ -2,6 +2,7 @@ import Tab from "./routes/tabs/tab";
 import Menu from "./routes/menu/menu";
 import Modal from "./routes/modal/modal";
 import Carousel from "./routes/carousel/carousel";
+import Calculator from "./routes/calculator/calculator";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="menu" element={<Menu />}></Route>
         <Route path="modal" element={<Modal />}></Route>
         <Route path="carousel" element={<Carousel />}></Route>
+        <Route path="calculator" element={<Calculator />}></Route>
       </Routes>
     </div>
   );
