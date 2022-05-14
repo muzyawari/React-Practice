@@ -15,12 +15,12 @@ export default function Todo() {
     }
 
     setItems([
-      ...items,
       {
         id: items.length + 1,
         input: input,
         completed: false,
       },
+      ...items,
     ]);
 
     setInput("");
@@ -31,29 +31,34 @@ export default function Todo() {
     setInput(target);
   }
 
-  function handleRemoveItem(e) {
-    const target =
-      e.target.previousElementSibling.previousElementSibling.textContent;
-
-    let removeItem = items.filter((item) => {
-      return item.input !== target;
+  function handleRemoveItem(id) {
+    const removeItem = items.filter((item) => {
+      return item.id !== id;
     });
 
     setItems(removeItem);
   }
 
   function handleStrikeItem(id) {
-    setItems(
-      items.map((item) => {
-        if (item.id === id) {
-          return {
-            ...item,
-            completed: !item.completed,
-          };
-        }
-        return item;
-      })
-    );
+    const filter = items
+      .filter((item) => item.id !== id)
+      .concat(
+        items.filter((item) => {
+          return item.id === id;
+        })
+      );
+
+    const complete = filter.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completed: !item.completed,
+        };
+      }
+      return item;
+    });
+
+    setItems(complete);
   }
 
   return (

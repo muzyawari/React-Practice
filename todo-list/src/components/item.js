@@ -24,7 +24,7 @@ export default function Item({
       </button>
       <button
         className="flex-no-shrink w-28 p-2 ml-2 border-2  mr-4 rounded text-rose-300 border-rose-300 hover:text-white hover:bg-rose-300"
-        onClick={handleRemoveItem}
+        onClick={() => handleRemoveItem(item.id)}
       >
         Remove
       </button>
