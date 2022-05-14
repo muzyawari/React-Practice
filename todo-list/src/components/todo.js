@@ -13,7 +13,14 @@ export default function Todo() {
       return;
     }
 
-    setItems([...items, input]);
+    setItems([
+      ...items,
+      {
+        id: items.length + 1,
+        input: input,
+        completed: false,
+      },
+    ]);
 
     setInput("");
   }
@@ -28,28 +35,26 @@ export default function Todo() {
       e.target.previousElementSibling.previousElementSibling.textContent;
 
     let removeItem = items.filter((item) => {
-      return item !== target;
+      return item.input !== target;
     });
+
+    console.log(removeItem);
 
     setItems(removeItem);
   }
 
-  function handleStrikeItem(e, i) {
-    const target = e.target.previousElementSibling.textContent;
-    console.log(i);
-
-    let strikeItems = items.map((item, index) => {
-      console.log(index);
-      if (item === target) {
-        setDone(i);
-      }
-    });
-
-    // console.log(result);
-
-    // if (strikeItem) {
-    //   setDone((prevDone) => !prevDone);
-    // }
+  function handleStrikeItem(id) {
+    setItems(
+      items.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            completed: !item.completed,
+          };
+        }
+        return item;
+      })
+    );
   }
 
   return (
@@ -77,11 +82,12 @@ export default function Todo() {
             </div>
           </div>
         </form>
-        <div>{items.length === 0 && <p>Add your first todo item</p>}</div>
-        {items.map((item, i) => (
+        <div className="italic pl-2">
+          {items.length === 0 && <p>Add your first todo item</p>}
+        </div>
+        {items.map((item) => (
           <Item
-            key={i}
-            i={i}
+            key={item.id}
             item={item}
             handleRemoveItem={handleRemoveItem}
             handleStrikeItem={handleStrikeItem}
