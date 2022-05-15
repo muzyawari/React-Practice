@@ -14,12 +14,15 @@ export default function Tab({ tab, setTab }) {
             setTab(1);
           }}
           tab={tab}
+          number={1}
         />
         <Completed
           text="Completed"
           handleClick={() => {
             setTab(2);
           }}
+          tab={tab}
+          number={2}
         />
       </ul>
     </>

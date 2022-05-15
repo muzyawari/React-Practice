@@ -1,4 +1,4 @@
-export default function Completed({ tab, handleClick, text }) {
+export default function Completed({ tab, handleClick, text, number }) {
   return (
     <li className="nav-item flex-auto text-center" role="presentation">
       <button
@@ -19,7 +19,7 @@ export default function Completed({ tab, handleClick, text }) {
 							active
 							text-gray-500
 						 ${
-               tab === 1
+               tab === number
                  ? "text-blue-600  border-b-2 border-blue-600 hover:text-blue-600 hover:border-blue-600"
                  : ""
              }`}

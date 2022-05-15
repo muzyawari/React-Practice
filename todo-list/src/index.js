@@ -3,10 +3,14 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 
+import { ItemProvider } from "./contexts/items.context.js";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ItemProvider>
+      <App />
+    </ItemProvider>
   </React.StrictMode>
 );
 

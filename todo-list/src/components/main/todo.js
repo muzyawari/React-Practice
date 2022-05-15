@@ -1,13 +1,12 @@
 import { useState } from "react";
 
-import Item from "./item";
-import TodoForm from "./todoForm";
-import Tab from "./tab";
+import Item from "../todo-items/item";
+import TodoForm from "../form/todoForm";
+import Tab from "../tabs/tab";
 
 export default function Todo() {
   const [items, setItems] = useState([]);
   const [input, setInput] = useState("");
-  const [done, setDone] = useState([]);
   const [tab, setTab] = useState(1);
 
   function handleSubmitForm(e) {
@@ -86,7 +85,6 @@ export default function Todo() {
             item={item}
             handleRemoveItem={handleRemoveItem}
             handleStrikeItem={handleStrikeItem}
-            done={done}
           />
         ))}
       </div>
