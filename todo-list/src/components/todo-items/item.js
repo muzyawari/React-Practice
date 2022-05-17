@@ -10,8 +10,6 @@ export default function Item({
 }) {
   const [modal, setModal] = useState(false);
 
-  console.log(modal);
-
   if (tab === 1 && !item.completed) {
     return (
       <>
