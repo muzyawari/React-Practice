@@ -16,7 +16,7 @@ export default function Item({
         <div className="flex items-center rounded shadow pt-4 pb-4 mb-2">
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
-            onClick={() => setModal(!modal)}
+            onClick={() => setModal(true)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -74,7 +74,7 @@ export default function Item({
           </button>
         </div>
 
-        {modal ? <Modal setModal={setModal} /> : null}
+        {modal ? <Modal setModal={setModal} item={item} /> : null}
       </>
     );
   } else if (tab === 2 && item.completed) {
@@ -87,7 +87,7 @@ export default function Item({
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+              className="h-3 w-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -110,7 +110,7 @@ export default function Item({
 
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
-            onClick={() => setModal(!modal)}
+            onClick={() => setModal(true)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -128,12 +128,12 @@ export default function Item({
             </svg>
           </button>
           <button
-            className="flex-no-shrink p-2 ml-2 border-2  mr-4 rounded text-rose-300 border-rose-300 hover:text-white hover:bg-rose-300"
+            className="flex-no-shrink p-2 ml-2 border-2 mr-4 rounded text-rose-300 border-rose-300 hover:text-white hover:bg-rose-300"
             onClick={() => handleRemoveItem(item.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
+              className="h-3 w-3"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -145,6 +145,7 @@ export default function Item({
             </svg>
           </button>
         </div>
+        {modal ? <Modal setModal={setModal} item={item} /> : null}
       </>
     );
   }
