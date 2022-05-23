@@ -1,6 +1,6 @@
 import DatePicker from "./datepicker";
 
-export default function Modal({ item, setModal }) {
+export default function Modal({ item, setModal, date, setDate }) {
   return (
     <div>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -30,7 +30,7 @@ export default function Modal({ item, setModal }) {
                     placeholder="Describe your todo item further..."
                   ></textarea>
                 </div>
-                <DatePicker />
+                <DatePicker date={date} setDate={setDate} />
               </form>
             </div>
 

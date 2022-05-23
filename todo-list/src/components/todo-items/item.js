@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import Modal from "./modal";
+import DateComparison from "./dateComparison";
 
 export default function Item({
   handleStrikeItem,
@@ -10,31 +11,12 @@ export default function Item({
 }) {
   const [modal, setModal] = useState(false);
 
+  const [date, setDate] = useState("");
+
   if (tab === 1 && !item.completed) {
     return (
       <>
         <div className="flex items-center rounded shadow pt-4 pb-4 mb-2">
-          <button
-            className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
-            onClick={() => setModal(true)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              />
-            </svg>
-          </button>
-
-          <p className={`w-full text-zinc-600 pl-4`}>{item.input}</p>
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green-400 border-green-300 hover:bg-green-300"
             onClick={() => handleStrikeItem(item.id)}
@@ -55,6 +37,29 @@ export default function Item({
             </svg>
           </button>
 
+          <div className="w-full">
+            <p className={` text-zinc-600 pl-4`}>{item.input}</p>
+          </div>
+          <DateComparison date={date} />
+          <button
+            className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
+            onClick={() => setModal(true)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-3 w-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+              />
+            </svg>
+          </button>
           <button
             className="flex-no-shrink p-2 ml-2 border-2  mr-4 rounded text-rose-300 border-rose-300 hover:text-white hover:bg-rose-300"
             onClick={() => handleRemoveItem(item.id)}
@@ -74,7 +79,14 @@ export default function Item({
           </button>
         </div>
 
-        {modal ? <Modal setModal={setModal} item={item} /> : null}
+        {modal ? (
+          <Modal
+            setModal={setModal}
+            item={item}
+            date={date}
+            setDate={setDate}
+          />
+        ) : null}
       </>
     );
   } else if (tab === 2 && item.completed) {
