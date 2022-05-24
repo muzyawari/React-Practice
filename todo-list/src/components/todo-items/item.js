@@ -8,15 +8,17 @@ export default function Item({
   handleRemoveItem,
   item,
   tab,
+  date,
+  handleDateForm,
 }) {
   const [modal, setModal] = useState(false);
 
-  const [date, setDate] = useState("");
+  console.log(item.timestamp);
 
   if (tab === 1 && !item.completed) {
     return (
       <>
-        <div className="flex items-center rounded shadow pt-4 pb-4 mb-2">
+        <div className="flex items-center rounded shadow pt-4 pb-4 mb-2 max-w-full		">
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green-400 border-green-300 hover:bg-green-300"
             onClick={() => handleStrikeItem(item.id)}
@@ -37,10 +39,10 @@ export default function Item({
             </svg>
           </button>
 
-          <div className="w-full">
+          <div className="w-4/12">
             <p className={` text-zinc-600 pl-4`}>{item.input}</p>
           </div>
-          <DateComparison date={date} />
+          <DateComparison date={date} time={item.timestamp} />
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
             onClick={() => setModal(true)}
@@ -84,7 +86,7 @@ export default function Item({
             setModal={setModal}
             item={item}
             date={date}
-            setDate={setDate}
+            handleDateForm={handleDateForm}
           />
         ) : null}
       </>

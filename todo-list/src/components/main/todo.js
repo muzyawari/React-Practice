@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+
+import db from "../../firebase";
 
 import Item from "../todo-items/item";
 import TodoForm from "../form/todoForm";
@@ -7,30 +11,53 @@ import Tab from "../tabs/tab";
 export default function Todo() {
   const [items, setItems] = useState([]);
   const [input, setInput] = useState("");
+  const [date, setDate] = useState("");
+
   const [tab, setTab] = useState(1);
 
-  function handleSubmitForm(e) {
+  const colRef = collection(db, "todo-items");
+
+  useEffect(() => {
+    const getItems = async () => {
+      const data = await getDocs(colRef);
+      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getItems();
+  }, []);
+
+  console.log(items);
+
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    if (!input) {
-      return;
-    }
-
+    if (!input) return;
     setItems([
       {
-        id: items.length + 1,
         input: input,
         completed: false,
+        timestamp: date,
       },
       ...items,
     ]);
 
+    await addDoc(colRef, {
+      input: input,
+      completed: false,
+      timestamp: date,
+    });
+
     setInput("");
-  }
+  };
 
   function handleInputForm(e) {
     const target = e.target.value;
     setInput(target);
+  }
+
+  function handleDateForm(e) {
+    const target = e.target.value;
+    setDate(target);
   }
 
   function handleRemoveItem(id) {
@@ -83,8 +110,11 @@ export default function Todo() {
             tab={tab}
             key={item.id}
             item={item}
+            date={date}
+            setDate={setDate}
             handleRemoveItem={handleRemoveItem}
             handleStrikeItem={handleStrikeItem}
+            handleDateForm={handleDateForm}
           />
         ))}
       </div>

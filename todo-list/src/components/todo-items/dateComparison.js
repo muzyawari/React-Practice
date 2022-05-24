@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 
 import Alert from "./alert";
 
-export default function DateComparison({ date }) {
+export default function DateComparison({ time }) {
   const [timerDays, setTimerDays] = useState();
   const [timerHours, setTimerHours] = useState();
   const [timerMinutes, setTimerMinutes] = useState();
   const [timerSeconds, setTimerSeconds] = useState();
+
   useEffect(() => {
-    if (date !== "") {
-      const inputDate = date.split("-");
+    if (time !== "") {
+      const inputDate = time.split("-");
       const countDownDate = new Date(
         inputDate[0],
         inputDate[1].substring(1) - 1,
@@ -57,13 +58,13 @@ export default function DateComparison({ date }) {
     return String(num).padStart(totalLength, "0");
   };
 
-  if (date) {
+  if (time) {
     return (
       <>
         {timerHours > 24 ? (
           <div
             id="alert-1"
-            className="flex p-2 mr-3 bg-blue-100 rounded-lg w-6/12"
+            className="flex p-2 mr-2 bg-blue-100 rounded-lg w-5/12"
             role="alert"
           >
             <svg
@@ -98,7 +99,7 @@ export default function DateComparison({ date }) {
     return (
       <div
         id="alert-1"
-        className="flex p-2 mr-2 bg-neutral-100 rounded-lg w-6/12"
+        className="flex p-2 mr-2 bg-neutral-100 rounded-lg w-5/12"
         role="alert"
       >
         <svg
