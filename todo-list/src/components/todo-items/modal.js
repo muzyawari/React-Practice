@@ -37,7 +37,7 @@ export default function Modal({ item, setModal, date, handleDateForm }) {
             <div className="flex items-center justify-end p-3 border-t border-solid border-slate-200 rounded-b">
               <button
                 className="flex-no-shrink p-2  border-2  mr-2 rounded text-rose-300 border-rose-300 hover:text-white hover:bg-rose-300"
-                onSubmit={() => setModal(false)}
+                onClick={() => setModal(false)}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

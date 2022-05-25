@@ -37,13 +37,15 @@ export default function DateComparison({ time }) {
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
         setTimerSeconds(seconds);
 
-        if (hours < 10 || minutes < 10 || seconds < 10) {
-          const hoursAmount = parseInt(hours.toString().padStart(2, "0"));
+        if (seconds < 10 || minutes < 10 || hours < 10) {
+          const hoursAmount = hours.toString().padStart(2, "0");
 
-          const minutesAmount = parseInt(minutes.toString().padStart(2, "0"));
+          const minutesAmount = minutes.toString().padStart(2, "0");
 
-          const secondsAmount = parseInt(seconds.toString().padStart(2, "0"));
+          const secondsAmount = seconds.toString().padStart(2, "0");
 
+          setTimerHours(hoursAmount);
+          setTimerMinutes(minutesAmount);
           setTimerSeconds(secondsAmount);
         }
       }, 1000);
