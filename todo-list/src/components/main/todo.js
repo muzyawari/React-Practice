@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 
-import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 
 import db from "../../firebase";
 
@@ -20,13 +30,11 @@ export default function Todo() {
   useEffect(() => {
     const getItems = async () => {
       const data = await getDocs(colRef);
-      setItems(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setItems(data.docs.map((doc) => ({ ...doc.data() })));
     };
 
     getItems();
   }, []);
-
-  console.log(items);
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -34,6 +42,7 @@ export default function Todo() {
     if (!input) return;
     setItems([
       {
+        id: items.length + 1,
         input: input,
         completed: false,
         timestamp: date,
@@ -41,13 +50,14 @@ export default function Todo() {
       ...items,
     ]);
 
+    setInput("");
+
     await addDoc(colRef, {
+      id: items.length + 1,
       input: input,
       completed: false,
       timestamp: date,
     });
-
-    setInput("");
   };
 
   function handleInputForm(e) {
@@ -60,15 +70,33 @@ export default function Todo() {
     setDate(target);
   }
 
-  function handleRemoveItem(id) {
+  const handleRemoveItem = async (id) => {
     const removeItem = items.filter((item) => {
       return item.id !== id;
     });
 
     setItems(removeItem);
-  }
 
-  function handleStrikeItem(id) {
+    const datas = await getDocs(colRef);
+    datas.forEach((data) => {
+      deleteDoc(data.ref, "todo-items", id);
+    });
+
+    // const itemDoc = doc(db, "todo-items", id);
+    // await deleteDoc(itemDoc, "todo-items", id);
+  };
+
+  const handleStrikeItem = async (id) => {
+    // const itemDoc = doc(db, "todo-items", id);
+
+    // const datas = await getDocs(colRef);
+    // datas.forEach((data) => {
+    //   const strikeDate = data(data.ref, "todo-items", id);
+    // });
+    // await updateDoc(itemDoc, {
+    //   completed: true,
+    // });
+
     const filter = items
       .filter((item) => item.id !== id)
       .concat(
@@ -81,14 +109,56 @@ export default function Todo() {
       if (item.id === id) {
         return {
           ...item,
-          completed: !item.completed,
+          completed: true,
         };
       }
       return item;
     });
 
     setItems(complete);
-  }
+
+    const q = query(colRef, where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      updateDoc(doc.ref, {
+        completed: true,
+      });
+    });
+  };
+
+  const handleUndoItem = async (id) => {
+    const filter = items
+      .filter((item) => item.id !== id)
+      .concat(
+        items.filter((item) => {
+          return item.id === id;
+        })
+      );
+
+    const complete = filter.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completed: false,
+        };
+      }
+      return item;
+    });
+
+    setItems(complete);
+
+    const q = query(colRef, where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      updateDoc(doc.ref, {
+        completed: false,
+      });
+    });
+  };
 
   return (
     <div
@@ -114,6 +184,7 @@ export default function Todo() {
             setDate={setDate}
             handleRemoveItem={handleRemoveItem}
             handleStrikeItem={handleStrikeItem}
+            handleUndoItem={handleUndoItem}
             handleDateForm={handleDateForm}
           />
         ))}

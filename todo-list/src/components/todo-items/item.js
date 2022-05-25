@@ -5,6 +5,7 @@ import DateComparison from "./dateComparison";
 
 export default function Item({
   handleStrikeItem,
+  handleUndoItem,
   handleRemoveItem,
   item,
   tab,
@@ -13,12 +14,10 @@ export default function Item({
 }) {
   const [modal, setModal] = useState(false);
 
-  console.log(item.timestamp);
-
   if (tab === 1 && !item.completed) {
     return (
       <>
-        <div className="flex items-center rounded shadow pt-4 pb-4 mb-2 max-w-full		">
+        <div className="flex items-center rounded shadow pt-4 pb-4 mb-2 max-w-full">
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green-400 border-green-300 hover:bg-green-300"
             onClick={() => handleStrikeItem(item.id)}
@@ -97,7 +96,7 @@ export default function Item({
         <div className="flex items-center rounded shadow pt-4 pb-4 mb-2">
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-amber-300 border-amber-300 hover:bg-amber-200"
-            onClick={() => handleStrikeItem(item.id)}
+            onClick={() => handleUndoItem(item.id)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
