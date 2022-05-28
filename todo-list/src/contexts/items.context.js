@@ -1,11 +1,17 @@
-import { createContext } from "react";
+import { useState, createContext } from "react";
 
 const ItemContext = createContext();
 
 function ItemProvider({ children }) {
-  const theme = "dark";
+  const [date, setDate] = useState("");
 
-  return <ItemContext.Provider value={theme}>{children}</ItemContext.Provider>;
+  const [items, setItems] = useState([]);
+
+  return (
+    <ItemContext.Provider value={{ date, setDate, items, setItems }}>
+      {children}
+    </ItemContext.Provider>
+  );
 }
 
 export { ItemContext, ItemProvider };

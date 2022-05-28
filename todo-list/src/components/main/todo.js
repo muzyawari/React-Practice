@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+
+import { ItemContext } from "../../contexts/items.context";
 
 import {
   getFirestore,
@@ -19,11 +21,11 @@ import TodoForm from "../form/todoForm";
 import Tab from "../tabs/tab";
 
 export default function Todo() {
-  const [items, setItems] = useState([]);
   const [input, setInput] = useState("");
-  const [date, setDate] = useState("");
 
   const [tab, setTab] = useState(1);
+
+  const { items, setItems, date, setDate } = useContext(ItemContext);
 
   const colRef = collection(db, "todo-items");
 
@@ -45,7 +47,6 @@ export default function Todo() {
         id: items.length + 1,
         input: input,
         completed: false,
-        timestamp: date,
       },
       ...items,
     ]);
@@ -56,18 +57,38 @@ export default function Todo() {
       id: items.length + 1,
       input: input,
       completed: false,
-      timestamp: date,
     });
   };
+
+  const handleDateAdd = async (id) => {
+    const dateAdd = items.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          timestamp: date,
+        };
+      }
+      return item;
+    });
+
+    setItems(dateAdd);
+
+    const q = query(colRef, where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      updateDoc(doc.ref, {
+        timestamp: date,
+      });
+    });
+  };
+
+  console.log(items);
 
   function handleInputForm(e) {
     const target = e.target.value;
     setInput(target);
-  }
-
-  function handleDateForm(e) {
-    const target = e.target.value;
-    setDate(target);
   }
 
   const handleRemoveItem = async (id) => {
@@ -180,12 +201,12 @@ export default function Todo() {
             tab={tab}
             key={item.id}
             item={item}
-            date={date}
             setDate={setDate}
             handleRemoveItem={handleRemoveItem}
             handleStrikeItem={handleStrikeItem}
             handleUndoItem={handleUndoItem}
-            handleDateForm={handleDateForm}
+            handleDateAdd={handleDateAdd}
+            handleInputForm={handleInputForm}
           />
         ))}
       </div>

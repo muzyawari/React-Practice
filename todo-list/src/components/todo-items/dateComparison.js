@@ -9,7 +9,9 @@ export default function DateComparison({ time }) {
   const [timerSeconds, setTimerSeconds] = useState();
 
   useEffect(() => {
-    if (time !== "") {
+    if (time === undefined) {
+      return;
+    } else {
       const inputDate = time.split("-");
       const countDownDate = new Date(
         inputDate[0],
@@ -55,10 +57,6 @@ export default function DateComparison({ time }) {
       };
     }
   });
-
-  const addLeadingZeros = (num, totalLength) => {
-    return String(num).padStart(totalLength, "0");
-  };
 
   if (time) {
     return (

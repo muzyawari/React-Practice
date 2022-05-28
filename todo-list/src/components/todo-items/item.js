@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+
+import { ItemContext } from "../../contexts/items.context";
 
 import Modal from "./modal";
 import DateComparison from "./dateComparison";
@@ -7,10 +9,10 @@ export default function Item({
   handleStrikeItem,
   handleUndoItem,
   handleRemoveItem,
+  handleDateAdd,
+  handleInputForm,
   item,
   tab,
-  date,
-  handleDateForm,
 }) {
   const [modal, setModal] = useState(false);
 
@@ -41,7 +43,7 @@ export default function Item({
           <div className="w-4/12">
             <p className={` text-zinc-600 pl-4`}>{item.input}</p>
           </div>
-          <DateComparison date={date} time={item.timestamp} />
+          <DateComparison time={item.timestamp} />
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
             onClick={() => setModal(true)}
@@ -84,8 +86,8 @@ export default function Item({
           <Modal
             setModal={setModal}
             item={item}
-            date={date}
-            handleDateForm={handleDateForm}
+            handleDateAdd={handleDateAdd}
+            handleInputForm={handleInputForm}
           />
         ) : null}
       </>

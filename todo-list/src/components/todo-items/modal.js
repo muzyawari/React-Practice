@@ -1,6 +1,12 @@
 import DatePicker from "./datepicker";
 
-export default function Modal({ item, setModal, date, handleDateForm }) {
+export default function Modal({
+  item,
+  setModal,
+  handleDateForm,
+  handleDateAdd,
+  handleInputForm,
+}) {
   return (
     <div>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -30,7 +36,7 @@ export default function Modal({ item, setModal, date, handleDateForm }) {
                     placeholder="Describe your todo item further..."
                   ></textarea>
                 </div>
-                <DatePicker date={date} handleDateForm={handleDateForm} />
+                <DatePicker handleDateForm={handleDateForm} />
               </form>
             </div>
 
@@ -54,7 +60,10 @@ export default function Modal({ item, setModal, date, handleDateForm }) {
               </button>
               <button
                 className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green-400 border-green-300 hover:bg-green-300"
-                onClick={() => setModal(false)}
+                onClick={() => {
+                  setModal(false);
+                  handleDateAdd(item.id);
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
