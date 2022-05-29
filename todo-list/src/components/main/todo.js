@@ -2,6 +2,8 @@ import { useState, useEffect, useContext } from "react";
 
 import { ItemContext } from "../../contexts/items.context";
 
+import { Draggable } from "react-beautiful-dnd";
+
 import {
   getFirestore,
   collection,
@@ -83,8 +85,6 @@ export default function Todo() {
       });
     });
   };
-
-  console.log(items);
 
   function handleInputForm(e) {
     const target = e.target.value;
@@ -196,19 +196,33 @@ export default function Todo() {
             <Tab tab={tab} setTab={setTab} />
           )}
         </div>
-        {items.map((item) => (
-          <Item
-            tab={tab}
-            key={item.id}
-            item={item}
-            setDate={setDate}
-            handleRemoveItem={handleRemoveItem}
-            handleStrikeItem={handleStrikeItem}
-            handleUndoItem={handleUndoItem}
-            handleDateAdd={handleDateAdd}
-            handleInputForm={handleInputForm}
-          />
-        ))}
+
+        {items.map((item, index) => {
+          const string = item.id.toString();
+          return (
+            <Draggable key={item.id} draggableId={string} index={index}>
+              {(provided) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                >
+                  <Item
+                    tab={tab}
+                    key={item.id}
+                    item={item}
+                    setDate={setDate}
+                    handleRemoveItem={handleRemoveItem}
+                    handleStrikeItem={handleStrikeItem}
+                    handleUndoItem={handleUndoItem}
+                    handleDateAdd={handleDateAdd}
+                    handleInputForm={handleInputForm}
+                  />
+                </div>
+              )}
+            </Draggable>
+          );
+        })}
       </div>
     </div>
   );
