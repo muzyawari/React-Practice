@@ -31,35 +31,40 @@ export default function Todo() {
 
   const colRef = collection(db, "todo-items");
 
-  useEffect(() => {
-    const getItems = async () => {
-      const data = await getDocs(colRef);
-      setItems(data.docs.map((doc) => ({ ...doc.data() })));
-    };
-
-    getItems();
-  }, []);
-
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
     if (!input) return;
+
+    try {
+      const response = await fetch("http://localhost:5000/todos", {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: input,
+        }),
+      });
+
+      console.log(response);
+    } catch (e) {
+      console.error(e.message);
+    }
     setItems([
       {
-        id: items.length + 1,
-        input: input,
-        completed: false,
+        title: input,
       },
       ...items,
     ]);
 
     setInput("");
 
-    await addDoc(colRef, {
-      id: items.length + 1,
-      input: input,
-      completed: false,
-    });
+    // await addDoc(colRef, {
+    //   id: items.length + 1,
+    //   input: input,
+    //   completed: false,
+    // });
   };
 
   const handleDateAdd = async (id) => {
@@ -108,16 +113,6 @@ export default function Todo() {
   };
 
   const handleStrikeItem = async (id) => {
-    // const itemDoc = doc(db, "todo-items", id);
-
-    // const datas = await getDocs(colRef);
-    // datas.forEach((data) => {
-    //   const strikeDate = data(data.ref, "todo-items", id);
-    // });
-    // await updateDoc(itemDoc, {
-    //   completed: true,
-    // });
-
     const filter = items
       .filter((item) => item.id !== id)
       .concat(
@@ -138,15 +133,34 @@ export default function Todo() {
 
     setItems(complete);
 
-    const q = query(colRef, where("id", "==", id));
-    const querySnapshot = await getDocs(q);
+    updateToDoComplete(id);
 
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      updateDoc(doc.ref, {
-        completed: true,
+    // const q = query(colRef, where("id", "==", id));
+    // const querySnapshot = await getDocs(q);
+
+    // querySnapshot.forEach((doc) => {
+    //   // doc.data() is never undefined for query doc snapshots
+    //   updateDoc(doc.ref, {
+    //     completed: true,
+    //   });
+    // });
+  };
+
+  const updateToDoComplete = async (id) => {
+    try {
+      const updateTodo = await fetch(`http://localhost:5000/todos/${id}`, {
+        method: "put",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          completed: true,
+        }),
       });
-    });
+      console.log(updateTodo);
+    } catch (e) {
+      console.error(e.message);
+    }
   };
 
   const handleUndoItem = async (id) => {
@@ -198,29 +212,30 @@ export default function Todo() {
         </div>
 
         {items.map((item, index) => {
-          const string = item.id.toString();
+          // const string = item.id.toString();
           return (
-            <Draggable key={item.id} draggableId={string} index={index}>
-              {(provided) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                >
-                  <Item
-                    tab={tab}
-                    key={item.id}
-                    item={item}
-                    setDate={setDate}
-                    handleRemoveItem={handleRemoveItem}
-                    handleStrikeItem={handleStrikeItem}
-                    handleUndoItem={handleUndoItem}
-                    handleDateAdd={handleDateAdd}
-                    handleInputForm={handleInputForm}
-                  />
-                </div>
-              )}
-            </Draggable>
+            <Item
+              tab={tab}
+              key={item.id}
+              item={item}
+              setDate={setDate}
+              handleRemoveItem={handleRemoveItem}
+              handleStrikeItem={handleStrikeItem}
+              handleUndoItem={handleUndoItem}
+              handleDateAdd={handleDateAdd}
+              handleInputForm={handleInputForm}
+            />
+            // <Draggable key={item.id} draggableId={string} index={index}>
+            // {(provided) => (
+            //   <div
+            //     ref={provided.innerRef}
+            //     {...provided.draggableProps}
+            //     {...provided.dragHandleProps}
+            //   >
+
+            //   </div>
+            // )}
+            // </Draggable>
           );
         })}
       </div>

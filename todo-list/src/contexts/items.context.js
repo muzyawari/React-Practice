@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 
 const ItemContext = createContext();
 
@@ -7,11 +7,23 @@ function ItemProvider({ children }) {
 
   const [items, setItems] = useState([]);
 
-  return (
-    <ItemContext.Provider value={{ date, setDate, items, setItems }}>
-      {children}
-    </ItemContext.Provider>
-  );
+  const getTodos = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/todos");
+      const jsonData = await response.json();
+      setItems(jsonData);
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const value = { date, setDate, items, setItems };
+
+  return <ItemContext.Provider value={value}>{children}</ItemContext.Provider>;
 }
 
 export { ItemContext, ItemProvider };

@@ -45,7 +45,7 @@ export default function Item({
           </button>
 
           <div className="w-4/12">
-            <p className={` text-zinc-600 pl-4`}>{item.input}</p>
+            <p className={` text-zinc-600 pl-4`}>{item.title}</p>
           </div>
           <DateComparison time={item.timestamp} />
           <button
@@ -124,7 +124,7 @@ export default function Item({
               item.completed ? "line-through text-slate-300" : ""
             }`}
           >
-            {item.input}
+            {item.title}
           </p>
 
           <button
