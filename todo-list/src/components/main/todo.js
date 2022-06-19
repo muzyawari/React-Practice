@@ -23,7 +23,7 @@ import TodoForm from "../form/todoForm";
 import Tab from "../tabs/tab";
 
 export default function Todo() {
-  const [input, setInput] = useState("");
+  const [title, setTitle] = useState("");
 
   const [tab, setTab] = useState(1);
 
@@ -34,18 +34,20 @@ export default function Todo() {
   const handleSubmitForm = async (e) => {
     e.preventDefault();
 
-    if (!input) return;
+    if (!title) return;
 
     try {
       const response = await fetch("http://localhost:5000/todos", {
-        method: "post",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: input,
+          title,
         }),
       });
+      console.log(title);
+      console.log(JSON.stringify(title));
 
       console.log(response);
     } catch (e) {
@@ -53,12 +55,12 @@ export default function Todo() {
     }
     setItems([
       {
-        title: input,
+        title,
       },
       ...items,
     ]);
 
-    setInput("");
+    setTitle("");
 
     // await addDoc(colRef, {
     //   id: items.length + 1,
@@ -93,7 +95,7 @@ export default function Todo() {
 
   function handleInputForm(e) {
     const target = e.target.value;
-    setInput(target);
+    setTitle(target);
   }
 
   const handleRemoveItem = async (id) => {
@@ -101,12 +103,20 @@ export default function Todo() {
       return item.id !== id;
     });
 
-    setItems(removeItem);
+    try {
+      const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`, {
+        method: "DELETE",
+      });
 
-    const datas = await getDocs(colRef);
-    datas.forEach((data) => {
-      deleteDoc(data.ref, "todo-items", id);
-    });
+      setItems(removeItem);
+    } catch (err) {
+      console.error(err.message);
+    }
+
+    // const datas = await getDocs(colRef);
+    // datas.forEach((data) => {
+    //   deleteDoc(data.ref, "todo-items", id);
+    // });
 
     // const itemDoc = doc(db, "todo-items", id);
     // await deleteDoc(itemDoc, "todo-items", id);
@@ -201,7 +211,7 @@ export default function Todo() {
       onSubmit={handleSubmitForm}
     >
       <div className="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
-        <TodoForm input={input} handleInputForm={handleInputForm} />
+        <TodoForm title={title} handleInputForm={handleInputForm} />
 
         <div className="italic pl-2 text-sm pt-4">
           {items.length === 0 ? (

@@ -11,6 +11,7 @@ function ItemProvider({ children }) {
     try {
       const response = await fetch("http://localhost:5000/todos");
       const jsonData = await response.json();
+      console.log(jsonData);
       setItems(jsonData);
     } catch (e) {
       console.error(e.message);

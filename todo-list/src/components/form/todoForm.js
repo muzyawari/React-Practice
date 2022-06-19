@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function TodoForm({ input, handleInputForm }) {
+export default function TodoForm({ title, handleInputForm }) {
   return (
     <form action="">
       <div className="mb-4">
@@ -10,7 +10,7 @@ export default function TodoForm({ input, handleInputForm }) {
             type="text"
             className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-zinc-600"
             placeholder="Add Todo"
-            value={input}
+            value={title}
             onChange={handleInputForm}
           />
           <button className="flex-no-shrink p-2 border-2 rounded text-teal-400 border-teal-200 hover:text-white hover:bg-teal-400">

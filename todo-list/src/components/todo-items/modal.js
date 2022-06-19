@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import DatePicker from "./datepicker";
 
 export default function Modal({
@@ -7,8 +9,37 @@ export default function Modal({
   handleDateAdd,
   handleInputForm,
 }) {
+  const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
+  const [date, setDate] = useState(item.time_due);
+
+  console.log(date);
+
+  let toTimestamp = (date) => Date.parse(date);
+
+  console.log(toTimestamp);
+
+  const updateEditToDo = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:5000/todos/${item.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description,
+          date,
+        }),
+      });
+      console.log(response);
+      // window.location = "/";
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
   return (
-    <div>
+    <div id={`id${item.id}`}>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative  my-6 mx-auto w-96">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -22,6 +53,8 @@ export default function Modal({
                     <input
                       type="text"
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
                     />
                   </div>
                 </div>
@@ -29,14 +62,30 @@ export default function Modal({
                   <label className="block mb-2 text-base font-medium text-gray-900 dark:text-gray-400">
                     Description
                   </label>
-                  <textarea
+                  <input
                     id="message"
                     rows="4"
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Describe your todo item further..."
-                  ></textarea>
+                    value={description !== null ? description : ""}
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></input>
                 </div>
-                <DatePicker handleDateForm={handleDateForm} />
+
+                <div className="mb-4">
+                  <label className="block text-base font-medium text-gray-900 dark:text-gray-400 mb-4">
+                    Due Date for Todo Item
+                  </label>
+                  <div className="flex">
+                    <input
+                      type="date"
+                      id="website-admin"
+                      className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      value={date !== null ? date : ""}
+                      onChange={(e) => setDate(e.target.value)}
+                    />
+                  </div>
+                </div>
               </form>
             </div>
 
@@ -60,9 +109,10 @@ export default function Modal({
               </button>
               <button
                 className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green-400 border-green-300 hover:bg-green-300"
-                onClick={() => {
+                onClick={(e) => {
                   setModal(false);
-                  handleDateAdd(item.id);
+                  updateEditToDo(e);
+                  // handleDateAdd(item.id);
                 }}
               >
                 <svg
