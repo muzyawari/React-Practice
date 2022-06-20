@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 
 import DatePicker from "./datepicker";
 
-export default function Modal({
-  item,
-  setModal,
-  handleDateForm,
-  handleDateAdd,
-  handleInputForm,
-}) {
+export default function Modal({ item, setModal }) {
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
   const [time_due, setTime_due] = useState(
@@ -19,7 +13,7 @@ export default function Modal({
     e.preventDefault();
     try {
       const response = await fetch(`http://localhost:5000/todos/${item.id}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
@@ -35,7 +29,7 @@ export default function Modal({
   };
 
   return (
-    <div id={`id${item.id}`}>
+    <div>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative  my-6 mx-auto w-96">
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -77,7 +71,7 @@ export default function Modal({
                       type="date"
                       id="website-admin"
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      value={time_due}
+                      value={time_due !== null ? time_due : ""}
                       onChange={(e) => setTime_due(e.target.value)}
                     />
                   </div>
@@ -108,7 +102,6 @@ export default function Modal({
                 onClick={(e) => {
                   setModal(false);
                   updateEditToDo(e);
-                  // handleDateAdd(item.id);
                 }}
               >
                 <svg

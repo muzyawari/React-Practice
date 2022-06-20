@@ -47,108 +47,10 @@ export default function Todo() {
     setTitle("");
   };
 
-  const handleDateAdd = async (id) => {
-    const dateAdd = items.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          timestamp: date,
-        };
-      }
-      return item;
-    });
-
-    setItems(dateAdd);
-  };
-
   function handleInputForm(e) {
     const target = e.target.value;
     setTitle(target);
   }
-
-  const handleRemoveItem = async (id) => {
-    const removeItem = items.filter((item) => {
-      return item.id !== id;
-    });
-
-    try {
-      const deleteTodo = await fetch(`http://localhost:5000/todos/${id}`, {
-        method: "DELETE",
-      });
-
-      setItems(removeItem);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
-
-  const handleStrikeItem = async (id) => {
-    const filter = items
-      .filter((item) => item.id !== id)
-      .concat(
-        items.filter((item) => {
-          return item.id === id;
-        })
-      );
-
-    const complete = filter.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          completed: true,
-        };
-      }
-      return item;
-    });
-
-    setItems(complete);
-
-    const finish = true;
-
-    updateToDoComplete(id, finish);
-  };
-
-  const updateToDoComplete = async (id, item) => {
-    try {
-      const updateTodo = await fetch(`http://localhost:5000/todos/${id}`, {
-        method: "put",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          completed: item,
-        }),
-      });
-      console.log(updateTodo);
-    } catch (e) {
-      console.error(e.message);
-    }
-  };
-
-  const handleUndoItem = async (id) => {
-    const filter = items
-      .filter((item) => item.id !== id)
-      .concat(
-        items.filter((item) => {
-          return item.id === id;
-        })
-      );
-
-    const complete = filter.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          completed: false,
-        };
-      }
-      return item;
-    });
-
-    setItems(complete);
-
-    const finish = false;
-    updateToDoComplete(id, finish);
-  };
 
   return (
     <div
@@ -169,16 +71,7 @@ export default function Todo() {
         {items.map((item, index) => {
           // const string = item.id.toString();
           return (
-            <Item
-              tab={tab}
-              item={item}
-              setDate={setDate}
-              handleRemoveItem={handleRemoveItem}
-              handleStrikeItem={handleStrikeItem}
-              handleUndoItem={handleUndoItem}
-              handleDateAdd={handleDateAdd}
-              handleInputForm={handleInputForm}
-            />
+            <Item tab={tab} item={item} setDate={setDate} />
             // <Draggable key={item.id} draggableId={string} index={index}>
             // {(provided) => (
             //   <div

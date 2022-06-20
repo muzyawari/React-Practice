@@ -5,17 +5,11 @@ import { ItemContext } from "../../contexts/items.context";
 import Modal from "./modal";
 import DateComparison from "./dateComparison";
 
-export default function Item({
-  handleStrikeItem,
-  handleUndoItem,
-  handleRemoveItem,
-  handleDateAdd,
-  handleInputForm,
-  item,
-  tab,
-  forwardRef,
-}) {
+export default function Item({ handleDateAdd, item, tab, forwardRef }) {
   const [modal, setModal] = useState(false);
+
+  const { handleStrikeItem, handleRemoveItem, handleUndoItem } =
+    useContext(ItemContext);
 
   if (tab === 1 && !item.completed) {
     return (
@@ -87,14 +81,7 @@ export default function Item({
           </button>
         </div>
 
-        {modal ? (
-          <Modal
-            setModal={setModal}
-            item={item}
-            handleDateAdd={handleDateAdd}
-            handleInputForm={handleInputForm}
-          />
-        ) : null}
+        {modal ? <Modal setModal={setModal} item={item} /> : null}
       </>
     );
   } else if (tab === 2 && item.completed) {
