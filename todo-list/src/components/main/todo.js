@@ -4,20 +4,6 @@ import { ItemContext } from "../../contexts/items.context";
 
 import { Draggable } from "react-beautiful-dnd";
 
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
-
-import db from "../../firebase";
-
 import Item from "../todo-items/item";
 import TodoForm from "../form/todoForm";
 import Tab from "../tabs/tab";
@@ -28,8 +14,6 @@ export default function Todo() {
   const [tab, setTab] = useState(1);
 
   const { items, setItems, date, setDate } = useContext(ItemContext);
-
-  const colRef = collection(db, "todo-items");
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
@@ -54,19 +38,13 @@ export default function Todo() {
       console.error(e.message);
     }
     setItems([
+      ...items,
       {
         title,
       },
-      ...items,
     ]);
 
     setTitle("");
-
-    // await addDoc(colRef, {
-    //   id: items.length + 1,
-    //   input: input,
-    //   completed: false,
-    // });
   };
 
   const handleDateAdd = async (id) => {
@@ -81,16 +59,6 @@ export default function Todo() {
     });
 
     setItems(dateAdd);
-
-    const q = query(colRef, where("id", "==", id));
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      updateDoc(doc.ref, {
-        timestamp: date,
-      });
-    });
   };
 
   function handleInputForm(e) {
@@ -112,14 +80,6 @@ export default function Todo() {
     } catch (err) {
       console.error(err.message);
     }
-
-    // const datas = await getDocs(colRef);
-    // datas.forEach((data) => {
-    //   deleteDoc(data.ref, "todo-items", id);
-    // });
-
-    // const itemDoc = doc(db, "todo-items", id);
-    // await deleteDoc(itemDoc, "todo-items", id);
   };
 
   const handleStrikeItem = async (id) => {
@@ -143,20 +103,12 @@ export default function Todo() {
 
     setItems(complete);
 
-    updateToDoComplete(id);
+    const finish = true;
 
-    // const q = query(colRef, where("id", "==", id));
-    // const querySnapshot = await getDocs(q);
-
-    // querySnapshot.forEach((doc) => {
-    //   // doc.data() is never undefined for query doc snapshots
-    //   updateDoc(doc.ref, {
-    //     completed: true,
-    //   });
-    // });
+    updateToDoComplete(id, finish);
   };
 
-  const updateToDoComplete = async (id) => {
+  const updateToDoComplete = async (id, item) => {
     try {
       const updateTodo = await fetch(`http://localhost:5000/todos/${id}`, {
         method: "put",
@@ -164,7 +116,7 @@ export default function Todo() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          completed: true,
+          completed: item,
         }),
       });
       console.log(updateTodo);
@@ -194,15 +146,8 @@ export default function Todo() {
 
     setItems(complete);
 
-    const q = query(colRef, where("id", "==", id));
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      updateDoc(doc.ref, {
-        completed: false,
-      });
-    });
+    const finish = false;
+    updateToDoComplete(id, finish);
   };
 
   return (
@@ -226,7 +171,6 @@ export default function Todo() {
           return (
             <Item
               tab={tab}
-              key={item.id}
               item={item}
               setDate={setDate}
               handleRemoveItem={handleRemoveItem}

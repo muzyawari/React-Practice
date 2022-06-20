@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import DatePicker from "./datepicker";
 
@@ -11,13 +11,9 @@ export default function Modal({
 }) {
   const [title, setTitle] = useState(item.title);
   const [description, setDescription] = useState(item.description);
-  const [date, setDate] = useState(item.time_due);
-
-  console.log(date);
-
-  let toTimestamp = (date) => Date.parse(date);
-
-  console.log(toTimestamp);
+  const [time_due, setTime_due] = useState(
+    `${item.year}-0${item.month}-${item.day}`
+  );
 
   const updateEditToDo = async (e) => {
     e.preventDefault();
@@ -28,11 +24,11 @@ export default function Modal({
         body: JSON.stringify({
           title,
           description,
-          date,
+          time_due,
         }),
       });
       console.log(response);
-      // window.location = "/";
+      window.location = "/";
     } catch (err) {
       console.error(err.message);
     }
@@ -81,8 +77,8 @@ export default function Modal({
                       type="date"
                       id="website-admin"
                       className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      value={date !== null ? date : ""}
-                      onChange={(e) => setDate(e.target.value)}
+                      value={time_due}
+                      onChange={(e) => setTime_due(e.target.value)}
                     />
                   </div>
                 </div>

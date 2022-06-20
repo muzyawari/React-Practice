@@ -22,6 +22,7 @@ export default function Item({
       <>
         <div
           className="flex items-center rounded shadow pt-4 pb-4 mb-2 max-w-full"
+          key={item.id}
           ref={forwardRef}
         >
           <button
@@ -47,7 +48,7 @@ export default function Item({
           <div className="w-4/12">
             <p className={` text-zinc-600 pl-4`}>{item.title}</p>
           </div>
-          <DateComparison time={item.timestamp} />
+          <DateComparison time={`${item.year}-0${item.month}-${item.day}`} />
           <button
             className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-zinc-300 border-zinc-300 hover:bg-zinc-300"
             onClick={() => setModal(true)}

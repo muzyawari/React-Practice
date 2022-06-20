@@ -28,7 +28,9 @@ app.post("/todos", async (req, res) => {
 // Get all todos
 app.get("/todos", async (req, res) => {
   try {
-    const allTodos = await pool.query("SELECT * FROM todo");
+    const allTodos = await pool.query(
+      "SELECT id, title, description, EXTRACT(YEAR FROM time_due) AS year, EXTRACT(MONTH FROM time_due) AS month, EXTRACT(DAY FROM time_due) AS day, completed, time_due FROM todo"
+    );
     res.json(allTodos.rows);
   } catch (e) {
     console.error(e.message);
@@ -38,9 +40,7 @@ app.get("/todos", async (req, res) => {
 app.get("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
-      id,
-    ]);
+    const todo = await pool.query("SELECT * FROM TODO WHERE id = $1", [id]);
     res.json(todo.rows[0]);
   } catch (e) {
     console.error(e.message);
@@ -51,10 +51,10 @@ app.get("/todos/:id", async (req, res) => {
 app.put("/todos/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, completed } = req.body;
+    const { title, description, time_due, completed, date } = req.body;
     const updateTodo = await pool.query(
-      "UPDATE todo SET title=$1, description=$2, completed=$3 WHERE id = $4",
-      [title, description, completed, id]
+      "UPDATE todo SET title=$1, description=$2, time_due=$3, completed=$4, date=$5 WHERE id = $6",
+      [title, description, time_due, completed, date, id]
     );
     res.json("Todo was updated");
   } catch (e) {

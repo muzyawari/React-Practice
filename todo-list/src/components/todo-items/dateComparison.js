@@ -9,7 +9,7 @@ export default function DateComparison({ time }) {
   const [timerSeconds, setTimerSeconds] = useState();
 
   useEffect(() => {
-    if (time === undefined) {
+    if (time === undefined || time === null) {
       return;
     } else {
       const inputDate = time.split("-");
